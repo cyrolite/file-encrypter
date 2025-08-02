@@ -15,9 +15,14 @@ class FileParser {
      * @throws IOException if an I/O error occurs while reading the file.
      */
     public static String parse(String filePath) {
+        // Sanitize the file path to prevent directory traversal attacks
+        String sanitisedFilePath = filePath.replaceAll("\\\\", "/")
+            .replaceAll("\\.\\./", "")
+            .replaceAll("\\.\\.", "");
+
         try {
             // Read the file content
-            BufferedReader reader = new BufferedReader(new FileReader(filePath));
+            BufferedReader reader = new BufferedReader(new FileReader(sanitisedFilePath));
             StringBuilder content = new StringBuilder();
             String line;
 
