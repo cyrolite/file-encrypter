@@ -107,8 +107,10 @@ public class AES256 {
      * @return A new ParsedFile containing the encrypted content.
      */
     public static ParsedFile encryptFile(ParsedFile file, String secretKey, String salt) {
-        String encryptedContent = encrypt(new String(file.getContent()), secretKey, salt);
-        return new ParsedFile(encryptedContent.getBytes());
+        byte[] content = file.getContent();
+        String base64 = Base64.getEncoder().encodeToString(content);
+        String encrypted = encrypt(base64, secretKey, salt);
+        return new ParsedFile(encrypted.getBytes(StandardCharsets.UTF_8));
     }
 
     /**
@@ -119,8 +121,10 @@ public class AES256 {
      * @return A new ParsedFile containing the decrypted content.
      */
     public static ParsedFile decryptFile(ParsedFile file, String secretKey, String salt) {
-        String decryptedContent = decrypt(new String(file.getContent()), secretKey, salt);
-        return new ParsedFile(decryptedContent.getBytes());
+        String encryptedString = new String(file.getContent(), StandardCharsets.UTF_8);
+        String decryptedBase64 = decrypt(encryptedString, secretKey, salt);
+        byte[] originalBytes = Base64.getDecoder().decode(decryptedBase64);
+        return new ParsedFile(originalBytes);
     }
 
     @Override

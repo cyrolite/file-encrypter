@@ -116,7 +116,6 @@ public final class ParsedFile {
      * @param o The object to compare with.
      * @return true if the objects are equal, false otherwise.
      */
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof ParsedFile)) return false;
