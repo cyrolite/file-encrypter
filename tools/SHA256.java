@@ -2,6 +2,9 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.nio.charset.StandardCharsets;
 
+/**
+ * SHA256 class provides methods to generate SHA-256 hashes.
+ */
 class SHA256 {
     /**
      * Generates a SHA-256 hash of the given plaintext.
