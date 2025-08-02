@@ -1,3 +1,5 @@
+// package tools;
+
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
@@ -97,6 +99,29 @@ public class AES256 {
         }
     }
 
+    /**
+     * Encrypts a ParsedFile using AES-256 encryption with a given secret key and salt.
+     * @param file The ParsedFile to encrypt.
+     * @param secretKey The secret key used for encryption.
+     * @param salt The salt used for key derivation.
+     * @return A new ParsedFile containing the encrypted content.
+     */
+    public static ParsedFile encryptFile(ParsedFile file, String secretKey, String salt) {
+        String encryptedContent = encrypt(new String(file.getContent()), secretKey, salt);
+        return new ParsedFile(encryptedContent.getBytes());
+    }
+
+    /**
+     * Decrypts a ParsedFile using AES-256 decryption with a given secret key and salt.
+     * @param file The ParsedFile to decrypt.
+     * @param secretKey The secret key used for decryption.
+     * @param salt The salt used for key derivation.
+     * @return A new ParsedFile containing the decrypted content.
+     */
+    public static ParsedFile decryptFile(ParsedFile file, String secretKey, String salt) {
+        String decryptedContent = decrypt(new String(file.getContent()), secretKey, salt);
+        return new ParsedFile(decryptedContent.getBytes());
+    }
 
     @Override
     /**
