@@ -1,11 +1,11 @@
 package io;
 
-import java.util.Scanner;
-
 import io.FileParser;
 import io.FileOutputParser;
 import util.ParsedFile;
 import tools.AES256;
+
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
