@@ -30,7 +30,7 @@ public class Main {
         String salt = "salt";
         FileOutputParser.writeEncrypted(fileDestination, FileParser.parse(filePathLocation), secretKey, salt);
 
-        System.out.println("File encrypted successfully and saved in " + fileDestination + "\\encrypt.txt");
+        System.out.println("File encrypted successfully and saved in " + fileDestination + "/encrypt.txt");
 
         String encryptedFilePathLocation = fileDestination + "\\encrypt.txt";
 
