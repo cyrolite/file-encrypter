@@ -1,4 +1,6 @@
-// package tools;
+package tools;
+
+import util.ParsedFile;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
@@ -10,6 +12,7 @@ import java.security.SecureRandom;
 import java.security.spec.KeySpec;
 import java.util.Base64;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 
 /**
  * AES256 class provides methods to encrypt strings using AES-256 encryption.
