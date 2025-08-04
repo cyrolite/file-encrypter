@@ -3,6 +3,11 @@
 A simple file encrypter/decrypter built in Java.  
 This application allows you to encrypt and decrypt files using AES-256 encryption, with a graphical user interface (JavaFX).
 
+## Supported Platforms
+
+**Currently supported on Windows only.**  
+Future updates will seek to add support for Mac (and Linux).
+
 ## Features
 
 - Encrypt any file using AES-256
