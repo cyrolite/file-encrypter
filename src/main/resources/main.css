@@ -1,0 +1,51 @@
+.root {
+    -fx-font-family: "Segoe UI", Arial, sans-serif;
+    font-family: "Segoe UI", Arial, sans-serif;
+    -fx-background-color: #f7f7f7;
+    background-color: #f7f7f7;
+}
+
+.label {
+    -fx-font-size: 14px;
+    font-size: 14px;
+    -fx-text-fill: #333;
+}
+
+.text-field {
+    -fx-font-size: 14px;
+    font-size: 14px;
+    -fx-background-color: #fff;
+    background-color: #fff;
+    -fx-border-color: #bbb;
+    border-color: #bbb;
+    -fx-border-radius: 4;
+    border-radius: 4px;
+    -fx-padding: 4 8 4 8;
+    padding: 4px 8px 4px 8px;
+}
+
+.button {
+    -fx-font-size: 14px;
+    font-size: 14px;
+    -fx-background-color: #4285f4;
+    background-color: #4285f4;
+    -fx-text-fill: white;
+    color: white;
+    -fx-background-radius: 4;
+    border-radius: 4px;
+    -fx-padding: 6 16 6 16;
+    padding: 6px 16px 6px 16px;
+}
+
+.text-area {
+    -fx-font-size: 13px;
+    font-size: 13px;
+    -fx-background-color: #fff;
+    background-color: #fff;
+    -fx-border-color: #bbb;
+    border-color: #bbb;
+    -fx-border-radius: 4;
+    border-radius: 4px;
+    -fx-padding: 8;
+    padding: 8px;
+}

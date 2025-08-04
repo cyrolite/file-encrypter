@@ -3,80 +3,101 @@ package io;
 import io.FileParser;
 import io.FileOutputParser;
 import util.ParsedFile;
-import tools.AES256;
-
-import javax.swing.*;
-import java.awt.*;
+import javafx.application.Application;
+import javafx.stage.Stage;
+import javafx.stage.FileChooser;
+import javafx.stage.DirectoryChooser;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import java.io.File;
 
-public class Main {
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            JFrame frame = new JFrame("File Encrypter/Decrypter");
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.setSize(500, 300);
-            frame.setLayout(new GridLayout(6, 1));
+public class Main extends Application {
+    @Override
+    public void start(Stage primaryStage) {
+        primaryStage.setTitle("File Encrypter/Decrypter");
 
-            JTextField filePathField = new JTextField();
-            JButton browseFileBtn = new JButton("Select File to Encrypt");
+        Label fileLabel = new Label("File to Encrypt:");
+        TextField filePathField = new TextField();
+        Button browseFileBtn = new Button("Browse...");
 
-            JTextField outputDirField = new JTextField();
-            JButton browseOutputBtn = new JButton("Select Output Directory");
+        Label outputLabel = new Label("Output Directory:");
+        TextField outputDirField = new TextField();
+        Button browseOutputBtn = new Button("Browse...");
 
-            JButton encryptBtn = new JButton("Encrypt and Decrypt");
-            JTextArea resultArea = new JTextArea();
+        Button encryptBtn = new Button("Encrypt and Decrypt");
+        TextArea resultArea = new TextArea();
+        resultArea.setEditable(false);
 
-            browseFileBtn.addActionListener(e -> {
-                JFileChooser chooser = new JFileChooser();
-                chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-                int result = chooser.showOpenDialog(null);
-                if (result == JFileChooser.APPROVE_OPTION) {
-                    File file = chooser.getSelectedFile();
-                    filePathField.setText(file.getAbsolutePath().replace("\\", "/"));
-                }
-            });
-
-            browseOutputBtn.addActionListener(e -> {
-                JFileChooser chooser = new JFileChooser();
-                chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-                int result = chooser.showOpenDialog(null);
-                if (result == JFileChooser.APPROVE_OPTION) {
-                    File file = chooser.getSelectedFile();
-                    outputDirField.setText(file.getAbsolutePath().replace("\\", "/"));
-                }
-            });
-
-            encryptBtn.addActionListener(e -> {
-                try {
-                    String filePath = filePathField.getText();
-                    String outputDir = outputDirField.getText();
-                    String secretKey = "pass";
-                    String salt = "salt";
-
-                    ParsedFile originalFile = FileParser.parse(filePath);
-                    FileOutputParser.writeEncrypted(outputDir, originalFile, secretKey, salt);
-
-                    String encryptedPath = outputDir + "/encrypt.txt";
-                    ParsedFile encryptedFile = FileParser.parse(encryptedPath);
-                    FileOutputParser.writeDecrypted(outputDir, encryptedFile, secretKey, salt);
-
-                    String decryptedPath = outputDir + "/decrypt." + originalFile.getFileType();
-
-                    resultArea.setText("Encryption and Decryption complete.\n" +
-                        "Encrypted: " + encryptedPath + "\nDecrypted: " + decryptedPath);
-                } catch (Exception ex) {
-                    resultArea.setText("Error: " + ex.getMessage());
-                }
-            });
-
-            frame.add(browseFileBtn);
-            frame.add(filePathField);
-            frame.add(browseOutputBtn);
-            frame.add(outputDirField);
-            frame.add(encryptBtn);
-            frame.add(new JScrollPane(resultArea));
-
-            frame.setVisible(true);
+        browseFileBtn.setOnAction(e -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Select File to Encrypt");
+            File file = fileChooser.showOpenDialog(primaryStage);
+            if (file != null) {
+                filePathField.setText(file.getAbsolutePath().replace("\\", "/"));
+            }
         });
+
+        browseOutputBtn.setOnAction(e -> {
+            DirectoryChooser dirChooser = new DirectoryChooser();
+            dirChooser.setTitle("Select Output Directory");
+            File dir = dirChooser.showDialog(primaryStage);
+            if (dir != null) {
+                outputDirField.setText(dir.getAbsolutePath().replace("\\", "/"));
+            }
+        });
+
+        encryptBtn.setOnAction(e -> {
+            try {
+                String filePath = filePathField.getText();
+                String outputDir = outputDirField.getText();
+                String secretKey = "pass";
+                String salt = "salt";
+
+                ParsedFile originalFile = FileParser.parse(filePath);
+                FileOutputParser.writeEncrypted(outputDir, originalFile, secretKey, salt);
+
+                String encryptedPath = outputDir + "/encrypt.txt";
+                ParsedFile encryptedFile = FileParser.parse(encryptedPath);
+                FileOutputParser.writeDecrypted(outputDir, encryptedFile, secretKey, salt);
+
+                String decryptedPath = outputDir + "/decrypt." + originalFile.getFileType();
+
+                resultArea.setText("Encryption and Decryption complete.\n" +
+                    "Encrypted: " + encryptedPath + "\nDecrypted: " + decryptedPath);
+            } catch (Exception ex) {
+                resultArea.setText("Error: " + ex.getMessage());
+            }
+        });
+
+        GridPane grid = new GridPane();
+        grid.setPadding(new Insets(20));
+        grid.setVgap(10);
+        grid.setHgap(10);
+
+        grid.add(fileLabel, 0, 0);
+        grid.add(filePathField, 1, 0);
+        grid.add(browseFileBtn, 2, 0);
+
+        grid.add(outputLabel, 0, 1);
+        grid.add(outputDirField, 1, 1);
+        grid.add(browseOutputBtn, 2, 1);
+
+        grid.add(encryptBtn, 1, 2);
+
+        VBox vbox = new VBox(10, grid, resultArea);
+        vbox.setPadding(new Insets(20));
+        vbox.setAlignment(Pos.TOP_CENTER);
+
+        Scene scene = new Scene(vbox, 600, 350);
+        scene.getStylesheets().add(getClass().getResource("/main.css").toExternalForm());
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+
+    public static void main(String[] args) {
+        launch(args);
     }
 }
