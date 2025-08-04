@@ -14,6 +14,13 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import java.io.File;
 
+
+/**
+ * Main class is the entry point for the JavaFX application.
+ * It provides a user interface for file encryption and decryption.
+ * It allows users to select a file to encrypt, specify an output directory,
+ * and perform encryption and decryption operations.
+ */
 public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
@@ -26,6 +33,21 @@ public class Main extends Application {
         Label outputLabel = new Label("Output Directory:");
         TextField outputDirField = new TextField();
         Button browseOutputBtn = new Button("Browse...");
+
+        Label passwordLabel = new Label("Secret Key:");
+        PasswordField passwordField = new PasswordField();
+
+        Label saltLabel = new Label("Salt:");
+        TextField saltField = new TextField();
+        Button generateSaltBtn = new Button("Generate Salt");
+
+        generateSaltBtn.setOnAction(e -> {
+            // Secure random salt generation (16 bytes, base64 encoded)
+            byte[] saltBytes = new byte[16];
+            new java.security.SecureRandom().nextBytes(saltBytes);
+            String salt = java.util.Base64.getEncoder().encodeToString(saltBytes);
+            saltField.setText(salt);
+        });
 
         Button encryptBtn = new Button("Encrypt and Decrypt");
         TextArea resultArea = new TextArea();
@@ -53,8 +75,8 @@ public class Main extends Application {
             try {
                 String filePath = filePathField.getText();
                 String outputDir = outputDirField.getText();
-                String secretKey = "pass";
-                String salt = "salt";
+                String secretKey = passwordField.getText();
+                String salt = saltField.getText();
 
                 ParsedFile originalFile = FileParser.parse(filePath);
                 FileOutputParser.writeEncrypted(outputDir, originalFile, secretKey, salt);
@@ -66,7 +88,8 @@ public class Main extends Application {
                 String decryptedPath = outputDir + "/decrypt." + originalFile.getFileType();
 
                 resultArea.setText("Encryption and Decryption complete.\n" +
-                    "Encrypted: " + encryptedPath + "\nDecrypted: " + decryptedPath);
+                    "Encrypted: " + encryptedPath + "\nDecrypted: " + decryptedPath +
+                    "\nSalt used: " + salt);
             } catch (Exception ex) {
                 resultArea.setText("Error: " + ex.getMessage());
             }
@@ -85,7 +108,14 @@ public class Main extends Application {
         grid.add(outputDirField, 1, 1);
         grid.add(browseOutputBtn, 2, 1);
 
-        grid.add(encryptBtn, 1, 2);
+        grid.add(passwordLabel, 0, 2);
+        grid.add(passwordField, 1, 2);
+
+        grid.add(saltLabel, 0, 3);
+        grid.add(saltField, 1, 3);
+        grid.add(generateSaltBtn, 2, 3);
+
+        grid.add(encryptBtn, 1, 4);
 
         VBox vbox = new VBox(10, grid, resultArea);
         vbox.setPadding(new Insets(20));
