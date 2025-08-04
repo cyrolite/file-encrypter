@@ -1,7 +1,7 @@
 # File Encrypter
 
 A simple file encrypter/decrypter built in Java.  
-This application allows you to encrypt and decrypt files using AES-256 encryption, with a graphical user interface (JavaFX) or console interface.
+This application allows you to encrypt and decrypt files using AES-256 encryption, with a graphical user interface (JavaFX).
 
 ## Features
 
@@ -12,38 +12,40 @@ This application allows you to encrypt and decrypt files using AES-256 encryptio
 
 ## Prerequisites
 
-- **Java 17** or newer
+- **Java 17** or newer (Java 21 recommended)
 - **JavaFX SDK 17+** ([Download here](https://gluonhq.com/products/javafx/))
+  - Download and extract the SDK (e.g., to `C:\javafx-sdk-21.0.8`)
 
-## Setup
+## Setup & Usage
 
-1. **Download and extract JavaFX SDK**  
-   [JavaFX SDK Download](https://gluonhq.com/products/javafx/)
-
-2. **Clone this repository**
+1. **Clone this repository**
    ```
    git clone https://github.com/yourusername/file-encrypter.git
    ```
 
-3. **Compile the project**
+2. **Download and extract JavaFX SDK**  
+   [JavaFX SDK Download](https://gluonhq.com/products/javafx/)
+
+3. **Edit `compileAndRun.bat` if needed**  
+   - Make sure the path to your JavaFX SDK in the script matches your setup.
+
+4. **Build and run the application**
    ```
-   javac --module-path "path/to/javafx-sdk/lib" --add-modules javafx.controls,javafx.fxml -d out src/main/java/io/*.java src/main/java/tools/*.java src/main/java/util/*.java
+   compileAndRun.bat
    ```
 
-4. **Run the application**
-   ```
-   java --module-path "path/to/javafx-sdk/lib" --add-modules javafx.controls,javafx.fxml -cp out io.Main
-   ```
+   This will compile and launch the application automatically.
 
-   Replace `"path/to/javafx-sdk/lib"` with the actual path to your JavaFX SDK's `lib` folder.
+## Manual Compile/Run (if not using the batch file)
 
-## Usage
+If you prefer to run commands manually:
 
-1. Launch the application.
-2. Select the file you want to encrypt.
-3. Choose the output directory.
-4. Enter your secret key and salt.
-5. Click "Encrypt and Decrypt" to process the file.
+```
+javac --module-path "path/to/javafx-sdk/lib" --add-modules javafx.controls,javafx.fxml -cp src/main/resources -d out src/main/java/io/*.java src/main/java/tools/*.java src/main/java/util/*.java
+java --module-path "path/to/javafx-sdk/lib" --add-modules javafx.controls,javafx.fxml -cp out;src/main/resources io.Main
+```
+
+Replace `"path/to/javafx-sdk/lib"` with the actual path to your JavaFX SDK's `lib` folder.
 
 ## Notes
 
@@ -53,4 +55,4 @@ This application allows you to encrypt and decrypt files using AES-256 encryptio
 
 ---
 
-**If you encounter any issues, please open an issue
+**If you encounter any issues, please open an issue or pull request.**

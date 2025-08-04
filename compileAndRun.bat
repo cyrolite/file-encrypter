@@ -1,0 +1,2 @@
+javac --module-path "C:\javafx-sdk-21.0.8\lib" --add-modules javafx.controls,javafx.fxml -cp src/main/resources -d out src/main/java/io/*.java src/main/java/tools/*.java src/main/java/util/*.java
+java --module-path "C:\javafx-sdk-21.0.8\lib" --add-modules javafx.controls,javafx.fxml -cp out;src/main/resources io.Main
