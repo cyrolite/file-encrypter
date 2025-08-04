@@ -20,12 +20,22 @@ import java.io.File;
 public class Main extends Application {
     private static String currentUser;
 
+    /**
+     * Launches the application with the specified user.
+     * This method sets the current user and starts the JavaFX application.
+     * @param username The username of the logged-in user.
+     */
     public static void launchWithUser(String username) {
         Main.currentUser = username;
         Application.launch(Main.class);
     }
 
     @Override
+    /**
+     * Starts the main UI for the application.
+     * This method sets up the UI components and handles file encryption and decryption.
+     * @param primaryStage The primary stage for this application.
+     */
     public void start(Stage primaryStage) {
         primaryStage.setTitle("File Encrypter/Decrypter - User: " + currentUser);
 
@@ -190,6 +200,12 @@ public class Main extends Application {
         primaryStage.show();
     }
 
+    /**
+     * Starts the application for a specific user.
+     * This method is called after a successful login to set the current user and start the main UI.
+     * @param stage The primary stage for this application.
+     * @param username The username of the logged-in user.
+     */
     public void startForUser(Stage stage, String username) {
         currentUser = username;
         start(stage);  // Reuse existing start method

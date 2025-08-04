@@ -12,6 +12,11 @@ import util.UserDB;
 public class Login extends Application {
 
     @Override
+    /**
+     * Starts the login UI for the application.
+     * This method sets up the UI components and handles user login and registration.
+     * @param primaryStage The primary stage for this application.
+     */
     public void start(Stage primaryStage) {
         // UI Elements
         Label userLabel = new Label("Username:");
@@ -69,6 +74,10 @@ public class Login extends Application {
         primaryStage.show();
     }
 
+    /**
+     * Main method to launch the application.
+     * @param args Command line arguments.
+     */
     public static void main(String[] args) {
         launch(args);
     }

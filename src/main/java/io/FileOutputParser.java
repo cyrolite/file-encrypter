@@ -26,7 +26,7 @@ public class FileOutputParser {
 
     /**
      * Writes the encrypted content of a ParsedFile to a specified directory.
-     * The file is saved as "encrypt.txt" in the specified directory.
+     * The file is saved as "encrypt.enc" in the specified directory.
      * @param fileDirectory The directory where the encrypted file will be saved.
      * @param parsedFile The ParsedFile object containing the content to encrypt.
      * @param secretKey The secret key used for encryption.
@@ -34,9 +34,19 @@ public class FileOutputParser {
      * @throws RuntimeException if the file cannot be written or encryption fails.
      */
     public static void writeEncrypted(String fileDirectory, ParsedFile parsedFile, String secretKey, String salt) {
-        FileOutputParser.writeEncryptedWithFileName(fileDirectory, parsedFile, secretKey, salt, "encrypt.txt");    
+        FileOutputParser.writeEncryptedWithFileName(fileDirectory, parsedFile, secretKey, salt, "encrypt.enc");    
     }
 
+    /**
+     * Writes the encrypted content of a ParsedFile to a specified directory with a given output file name.
+     * The file is saved with the specified output file name in the specified directory.
+     * @param fileDirectory The directory where the encrypted file will be saved.
+     * @param parsedFile The ParsedFile object containing the content to encrypt.
+     * @param secretKey The secret key used for encryption.
+     * @param salt The salt used for key derivation.
+     * @param outputFileName The name of the output file to save the encrypted content.
+     * @throws RuntimeException if the file cannot be written or encryption fails.
+     * */
     public static void writeEncryptedWithFileName(String fileDirectory, ParsedFile parsedFile, String secretKey, String salt, String outputFileName) {
         ParsedFile encryptedFile = AES256.encryptFile(parsedFile, secretKey, salt);
         String filePath = fileDirectory.replace("\\", "/").replaceAll("\\.\\./", "").replaceAll("\\.\\.", "");
@@ -55,18 +65,27 @@ public class FileOutputParser {
     }
 
     /**
-     * Writes the decrypted content of a ParsedFile to a specified directory.
-     * The file is saved as "decrypt.<fileType>" in the specified directory.
-     * @param fileDirectory The directory where the decrypted file will be saved.
-     * @param parsedFile The ParsedFile object containing the content to decrypt.
-     * @param secretKey The secret key used for decryption.
-     * @param salt The salt used for key derivation.
-     * @throws RuntimeException if the file cannot be written or decryption fails.
-     */
+        * Writes the decrypted content of a ParsedFile to a specified directory.
+        * The file is saved as "decrypt" in the specified directory.
+        * @param fileDirectory The directory where the decrypted file will be saved.
+        * @param parsedFile The ParsedFile object containing the content to decrypt.
+        * @param secretKey The secret key used for decryption.
+        * @param ignoredSalt Ignored salt parameter, not used in this method.
+        * @throws RuntimeException if the file cannot be written or decryption fails.
+        */
     public static void writeDecrypted(String fileDirectory, ParsedFile parsedFile, String secretKey, String ignoredSalt) {
         FileOutputParser.writeDecryptedWithFileName(fileDirectory, parsedFile, secretKey, ignoredSalt, "decrypt");
     }
 
+    /** * Writes the decrypted content of a ParsedFile to a specified directory with a given output file name.
+     * The file is saved with the specified output file name in the specified directory.
+     * @param fileDirectory The directory where the decrypted file will be saved.
+     * @param parsedFile The ParsedFile object containing the content to decrypt.
+     * @param secretKey The secret key used for decryption.
+     * @param ignoredSalt Ignored salt parameter, not used in this method.
+     * @param outputFileName The name of the output file to save the decrypted content.
+     * @throws RuntimeException if the file cannot be written or decryption fails.
+     * */
     public static void writeDecryptedWithFileName(String fileDirectory, ParsedFile parsedFile, String secretKey, String ignoredSalt, String outputFileName) {
         byte[] fullContent = parsedFile.getContent();
 
