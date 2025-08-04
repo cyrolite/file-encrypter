@@ -2,7 +2,7 @@
 *.db
 
 # Ignore everything under any 'user' directory, regardless of nesting
-**/user/**
+**/users/**
 
 # Ignore Windows hidden system files
 Thumbs.db
