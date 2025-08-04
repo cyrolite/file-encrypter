@@ -50,12 +50,12 @@ javac -cp "lib/sqlite-jdbc-3.42.0.0.jar;src/main/resources" --module-path "C:\ja
 java -cp "out;lib/sqlite-jdbc-3.42.0.0.jar;src/main/resources" --module-path "C:\javafx-sdk-21.0.8\lib" --add-modules javafx.controls,javafx.fxml ui.Login
 ```
 
-Replace `"path/to/javafx-sdk/lib"` with the actual path to your JavaFX SDK's `lib` folder.
+Replace `"C:\javafx-sdk-21.0.8\lib"` with the actual path to your JavaFX SDK's `lib` folder.
 
 ## Notes
 
-- The encrypted file will be saved as `encrypt.txt` in your chosen output directory.
-- The decrypted file will be saved as `decrypt.<original_extension>` in the same directory.
+- The encrypted file will be saved as `<your_file_name>.txt` in your chosen output directory.
+- The decrypted file will be saved as `<your_file_name>.<original_extension>` in the same directory.
 - Make sure your secret key and salt are kept safe for decryption.
 
 ---
