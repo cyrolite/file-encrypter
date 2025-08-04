@@ -34,9 +34,13 @@ public class FileOutputParser {
      * @throws RuntimeException if the file cannot be written or encryption fails.
      */
     public static void writeEncrypted(String fileDirectory, ParsedFile parsedFile, String secretKey, String salt) {
+        FileOutputParser.writeEncryptedWithFileName(fileDirectory, parsedFile, secretKey, salt, "encrypt.txt");    
+    }
+
+    public static void writeEncryptedWithFileName(String fileDirectory, ParsedFile parsedFile, String secretKey, String salt, String outputFileName) {
         ParsedFile encryptedFile = AES256.encryptFile(parsedFile, secretKey, salt);
         String filePath = fileDirectory.replace("\\", "/").replaceAll("\\.\\./", "").replaceAll("\\.\\.", "");
-        filePath += "/encrypt.txt";
+        filePath += "/" + outputFileName + ".enc";
 
         try (FileOutputStream fos = new FileOutputStream(filePath)) {
             byte[] saltBytes = java.util.Base64.getDecoder().decode(salt);
@@ -60,6 +64,10 @@ public class FileOutputParser {
      * @throws RuntimeException if the file cannot be written or decryption fails.
      */
     public static void writeDecrypted(String fileDirectory, ParsedFile parsedFile, String secretKey, String ignoredSalt) {
+        FileOutputParser.writeDecryptedWithFileName(fileDirectory, parsedFile, secretKey, ignoredSalt, "decrypt");
+    }
+
+    public static void writeDecryptedWithFileName(String fileDirectory, ParsedFile parsedFile, String secretKey, String ignoredSalt, String outputFileName) {
         byte[] fullContent = parsedFile.getContent();
 
         // Split salt and encrypted content
@@ -75,7 +83,7 @@ public class FileOutputParser {
         ParsedFile decryptedFile = AES256.decryptFile(encryptedFile, secretKey, extractedSalt);
 
         String filePath = fileDirectory.replace("\\", "/").replaceAll("\\.\\./", "").replaceAll("\\.\\.", "");
-        filePath += "/decrypt." + decryptedFile.getFileType();
+        filePath += "/" + outputFileName + "." + decryptedFile.getFileType();
 
         try (FileOutputStream fos = new FileOutputStream(filePath)) {
             fos.write(decryptedFile.getContent());

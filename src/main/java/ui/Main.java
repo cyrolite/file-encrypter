@@ -51,6 +51,9 @@ public class Main extends Application {
             }
         });
 
+        Label outputFileLabel = new Label("Output File Name:");
+        TextField outputFileNameField = new TextField();
+
         Label passwordLabel = new Label("Secret Key:");
         PasswordField passwordField = new PasswordField();
 
@@ -96,6 +99,7 @@ public class Main extends Application {
                 String outputDir = outputDirField.getText();
                 String secretKey = passwordField.getText();
                 String action = actionComboBox.getValue();
+                String outputFileName = outputFileNameField.getText().trim();
 
                 if (secretKey == null || secretKey.isEmpty()) {
                     resultArea.setText("Error: Secret key is required.");
@@ -107,6 +111,11 @@ public class Main extends Application {
                     return;
                 }
 
+                if (outputFileName.isEmpty()) {
+                    resultArea.setText("Please enter a valid output file name.");
+                    return;
+                }
+
                 if (action.equals("Encrypt")) {
                     String salt = saltField.getText();
                     if (salt == null || salt.isEmpty()) {
@@ -115,17 +124,17 @@ public class Main extends Application {
                     }
 
                     ParsedFile originalFile = FileParser.parse(filePath);
-                    FileOutputParser.writeEncrypted(outputDir, originalFile, secretKey, salt);
+                    FileOutputParser.writeEncryptedWithFileName(outputDir, originalFile, secretKey, salt, outputFileName);
 
-                    String encryptedPath = outputDir + "/encrypt.txt";
+                    String encryptedPath = outputDir + outputFileName + ".enc";
                     resultArea.setText("Encryption complete.\nEncrypted: " + encryptedPath + "\nSalt used: " + salt);
 
                 } else if (action.equals("Decrypt")) {
                     ParsedFile encryptedFile = FileParser.parse(filePath);
                     try {
-                        FileOutputParser.writeDecrypted(outputDir, encryptedFile, secretKey, null);
+                        FileOutputParser.writeDecryptedWithFileName(outputDir, encryptedFile, secretKey, null, outputFileName);
                         String fileType = new ParsedFile(encryptedFile.getContent()).getFileType();
-                        String decryptedPath = outputDir + "/decrypt." + fileType;
+                        String decryptedPath = outputDir + "/" + outputFileName + ".enc";
 
                         resultArea.setText("Decryption successful.\nDecrypted: " + decryptedPath);
                     } catch (Exception ex) {
@@ -151,17 +160,20 @@ public class Main extends Application {
         grid.add(outputDirField, 1, 1);
         grid.add(outputBrowseBtn, 2, 1);
 
-        grid.add(passwordLabel, 0, 2);
-        grid.add(passwordField, 1, 2);
+        grid.add(outputFileLabel, 0, 2);
+        grid.add(outputFileNameField, 1, 2, 2, 1);
 
-        grid.add(saltLabel, 0, 3);
-        grid.add(saltField, 1, 3);
-        grid.add(generateSaltBtn, 2, 3);
+        grid.add(passwordLabel, 0, 3);
+        grid.add(passwordField, 1, 3);
 
-        grid.add(actionLabel, 0, 4);
-        grid.add(actionComboBox, 1, 4);
+        grid.add(saltLabel, 0, 4);
+        grid.add(saltField, 1, 4);
+        grid.add(generateSaltBtn, 2, 4);
 
-        grid.add(runBtn, 1, 5);
+        grid.add(actionLabel, 0, 5);
+        grid.add(actionComboBox, 1, 5);
+
+        grid.add(runBtn, 1, 6);
 
         VBox vbox = new VBox(10, grid, resultArea);
         vbox.setPadding(new Insets(20));
