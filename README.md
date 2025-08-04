@@ -20,7 +20,7 @@ This application allows you to encrypt and decrypt files using AES-256 encryptio
 
 1. **Clone this repository**
    ```
-   git clone https://github.com/yourusername/file-encrypter.git
+   git clone https://github.com/cyrolite/file-encrypter.git
    ```
 
 2. **Download and extract JavaFX SDK**  
