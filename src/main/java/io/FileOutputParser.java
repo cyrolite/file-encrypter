@@ -36,9 +36,15 @@ public class FileOutputParser {
     public static void writeEncrypted(String fileDirectory, ParsedFile parsedFile, String secretKey, String salt) {
         ParsedFile encryptedFile = AES256.encryptFile(parsedFile, secretKey, salt);
         String filePath = fileDirectory.replace("\\", "/").replaceAll("\\.\\./", "").replaceAll("\\.\\.", "");
-        filePath += "/encrypt.txt"; // Add missing slash
+        filePath += "/encrypt.txt";
+
         try (FileOutputStream fos = new FileOutputStream(filePath)) {
-            fos.write(encryptedFile.getContent());
+            byte[] saltBytes = java.util.Base64.getDecoder().decode(salt);
+            byte[] encryptedBytes = encryptedFile.getContent();
+
+            // Write salt first, then encrypted content
+            fos.write(saltBytes);
+            fos.write(encryptedBytes);
         } catch (IOException e) {
             throw new RuntimeException("Failed to write encrypted file: " + filePath, e);
         }
@@ -53,8 +59,20 @@ public class FileOutputParser {
      * @param salt The salt used for key derivation.
      * @throws RuntimeException if the file cannot be written or decryption fails.
      */
-    public static void writeDecrypted(String fileDirectory, ParsedFile parsedFile, String secretKey, String salt) {
-        ParsedFile decryptedFile = AES256.decryptFile(parsedFile, secretKey, salt);
+    public static void writeDecrypted(String fileDirectory, ParsedFile parsedFile, String secretKey, String ignoredSalt) {
+        byte[] fullContent = parsedFile.getContent();
+
+        // Split salt and encrypted content
+        byte[] saltBytes = new byte[16]; // 16 raw bytes = 128-bit salt
+        byte[] encryptedBytes = new byte[fullContent.length - 16];
+
+        System.arraycopy(fullContent, 0, saltBytes, 0, 16);
+        System.arraycopy(fullContent, 16, encryptedBytes, 0, encryptedBytes.length);
+
+        String extractedSalt = java.util.Base64.getEncoder().encodeToString(saltBytes);
+        ParsedFile encryptedFile = new ParsedFile(encryptedBytes);
+
+        ParsedFile decryptedFile = AES256.decryptFile(encryptedFile, secretKey, extractedSalt);
 
         String filePath = fileDirectory.replace("\\", "/").replaceAll("\\.\\./", "").replaceAll("\\.\\.", "");
         filePath += "/decrypt." + decryptedFile.getFileType();

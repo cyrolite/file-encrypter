@@ -49,7 +49,12 @@ public class Main extends Application {
             saltField.setText(salt);
         });
 
-        Button encryptBtn = new Button("Encrypt and Decrypt");
+        Label actionLabel = new Label("Action:");
+        ComboBox<String> actionComboBox = new ComboBox<>();
+        actionComboBox.getItems().addAll("Encrypt", "Decrypt");
+        actionComboBox.setValue("Encrypt");
+
+        Button runBtn = new Button("Run");
         TextArea resultArea = new TextArea();
         resultArea.setEditable(false);
 
@@ -71,29 +76,49 @@ public class Main extends Application {
             }
         });
 
-        encryptBtn.setOnAction(e -> {
-            try {
-                String filePath = filePathField.getText();
-                String outputDir = outputDirField.getText();
-                String secretKey = passwordField.getText();
+    runBtn.setOnAction(e -> {
+        try {
+            String filePath = filePathField.getText();
+            String outputDir = outputDirField.getText();
+            String secretKey = passwordField.getText();
+            String action = actionComboBox.getValue();
+
+            if (secretKey == null || secretKey.isEmpty()) {
+                resultArea.setText("Error: Secret key is required.");
+                return;
+            }
+
+            if (action.equals("Encrypt")) {
                 String salt = saltField.getText();
+                if (salt == null || salt.isEmpty()) {
+                    resultArea.setText("Error: Salt is required for encryption.");
+                    return;
+                }
 
                 ParsedFile originalFile = FileParser.parse(filePath);
                 FileOutputParser.writeEncrypted(outputDir, originalFile, secretKey, salt);
 
                 String encryptedPath = outputDir + "/encrypt.txt";
-                ParsedFile encryptedFile = FileParser.parse(encryptedPath);
-                FileOutputParser.writeDecrypted(outputDir, encryptedFile, secretKey, salt);
+                resultArea.setText("Encryption complete.\nEncrypted: " + encryptedPath + "\nSalt used: " + salt);
 
-                String decryptedPath = outputDir + "/decrypt." + originalFile.getFileType();
+            } else if (action.equals("Decrypt")) {
+                ParsedFile encryptedFile = FileParser.parse(filePath);
 
-                resultArea.setText("Encryption and Decryption complete.\n" +
-                    "Encrypted: " + encryptedPath + "\nDecrypted: " + decryptedPath +
-                    "\nSalt used: " + salt);
-            } catch (Exception ex) {
-                resultArea.setText("Error: " + ex.getMessage());
+                try {
+                    FileOutputParser.writeDecrypted(outputDir, encryptedFile, secretKey, null);
+                    String fileType = new ParsedFile(encryptedFile.getContent()).getFileType();
+                    String decryptedPath = outputDir + "/decrypt." + fileType;
+
+                    resultArea.setText("Decryption successful.\nDecrypted: " + decryptedPath);
+                } catch (Exception ex) {
+                    resultArea.setText("Incorrect password or corrupted file.\n" + ex.getMessage());
+                }
             }
-        });
+        } catch (Exception ex) {
+            resultArea.setText("Error: " + ex.getMessage());
+        }
+    });
+
 
         GridPane grid = new GridPane();
         grid.setPadding(new Insets(20));
@@ -115,7 +140,10 @@ public class Main extends Application {
         grid.add(saltField, 1, 3);
         grid.add(generateSaltBtn, 2, 3);
 
-        grid.add(encryptBtn, 1, 4);
+        grid.add(actionLabel, 0, 4);
+        grid.add(actionComboBox, 1, 4);
+
+        grid.add(runBtn, 1, 4);
 
         VBox vbox = new VBox(10, grid, resultArea);
         vbox.setPadding(new Insets(20));
