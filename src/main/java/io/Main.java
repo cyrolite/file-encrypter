@@ -5,43 +5,78 @@ import io.FileOutputParser;
 import util.ParsedFile;
 import tools.AES256;
 
-import java.util.Scanner;
+import javax.swing.*;
+import java.awt.*;
+import java.io.File;
 
 public class Main {
     public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        System.out.print("Enter the absolute path of the file to be encrypted: ");
-        String filePathLocation = sc.nextLine()
-            .replace("\\", "/")
-            .replaceAll("\\.\\./", "")
-            .replaceAll("\\.\\.", "");
-        System.out.println("File to be encrypted: " + filePathLocation);
+        SwingUtilities.invokeLater(() -> {
+            JFrame frame = new JFrame("File Encrypter/Decrypter");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setSize(500, 300);
+            frame.setLayout(new GridLayout(6, 1));
 
+            JTextField filePathField = new JTextField();
+            JButton browseFileBtn = new JButton("Select File to Encrypt");
 
-        System.out.print("Select the output of the directory you want the file to be in: ");
-        String fileDestination = sc.nextLine()
-            .replace("\\", "/")
-            .replaceAll("\\.\\./", "")
-            .replaceAll("\\.\\.", "");
-        System.out.println("Output directory: " + fileDestination);
+            JTextField outputDirField = new JTextField();
+            JButton browseOutputBtn = new JButton("Select Output Directory");
 
+            JButton encryptBtn = new JButton("Encrypt and Decrypt");
+            JTextArea resultArea = new JTextArea();
 
-        String secretKey = "pass";
-        String salt = "salt";
-        FileOutputParser.writeEncrypted(fileDestination, FileParser.parse(filePathLocation), secretKey, salt);
+            browseFileBtn.addActionListener(e -> {
+                JFileChooser chooser = new JFileChooser();
+                chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+                int result = chooser.showOpenDialog(null);
+                if (result == JFileChooser.APPROVE_OPTION) {
+                    File file = chooser.getSelectedFile();
+                    filePathField.setText(file.getAbsolutePath().replace("\\", "/"));
+                }
+            });
 
-        System.out.println("File encrypted successfully and saved in " + fileDestination + "/encrypt.txt");
+            browseOutputBtn.addActionListener(e -> {
+                JFileChooser chooser = new JFileChooser();
+                chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+                int result = chooser.showOpenDialog(null);
+                if (result == JFileChooser.APPROVE_OPTION) {
+                    File file = chooser.getSelectedFile();
+                    outputDirField.setText(file.getAbsolutePath().replace("\\", "/"));
+                }
+            });
 
-        String encryptedFilePathLocation = fileDestination + "\\encrypt.txt";
+            encryptBtn.addActionListener(e -> {
+                try {
+                    String filePath = filePathField.getText();
+                    String outputDir = outputDirField.getText();
+                    String secretKey = "pass";
+                    String salt = "salt";
 
-        ParsedFile encryptedFile = FileParser.parse(encryptedFilePathLocation);
-        System.out.print(encryptedFilePathLocation + " has been parsed successfully.\n");
+                    ParsedFile originalFile = FileParser.parse(filePath);
+                    FileOutputParser.writeEncrypted(outputDir, originalFile, secretKey, salt);
 
+                    String encryptedPath = outputDir + "/encrypt.txt";
+                    ParsedFile encryptedFile = FileParser.parse(encryptedPath);
+                    FileOutputParser.writeDecrypted(outputDir, encryptedFile, secretKey, salt);
 
-        FileOutputParser.writeDecrypted(fileDestination, encryptedFile, secretKey, salt);
-        System.out.println("File decrypted successfully and saved in " + fileDestination + 
-            "\\decrypt." + FileParser.parse(filePathLocation).getFileType());
-        sc.close();
-        System.out.println("Program completed.");
+                    String decryptedPath = outputDir + "/decrypt." + originalFile.getFileType();
+
+                    resultArea.setText("Encryption and Decryption complete.\n" +
+                        "Encrypted: " + encryptedPath + "\nDecrypted: " + decryptedPath);
+                } catch (Exception ex) {
+                    resultArea.setText("Error: " + ex.getMessage());
+                }
+            });
+
+            frame.add(browseFileBtn);
+            frame.add(filePathField);
+            frame.add(browseOutputBtn);
+            frame.add(outputDirField);
+            frame.add(encryptBtn);
+            frame.add(new JScrollPane(resultArea));
+
+            frame.setVisible(true);
+        });
     }
 }
