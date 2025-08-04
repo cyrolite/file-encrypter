@@ -40,7 +40,16 @@ public class Main extends Application {
 
         Label outputLabel = new Label("Output Directory:");
         TextField outputDirField = new TextField(userDir.getAbsolutePath().replace("\\", "/"));
-        outputDirField.setEditable(false);
+        Button outputBrowseBtn = new Button("Browse...");
+
+        outputBrowseBtn.setOnAction(e -> {
+            DirectoryChooser directoryChooser = new DirectoryChooser();
+            directoryChooser.setTitle("Select Output Directory");
+            File selectedDirectory = directoryChooser.showDialog(primaryStage);
+            if (selectedDirectory != null) {
+                outputDirField.setText(selectedDirectory.getAbsolutePath());
+            }
+        });
 
         Label passwordLabel = new Label("Secret Key:");
         PasswordField passwordField = new PasswordField();
@@ -140,6 +149,7 @@ public class Main extends Application {
 
         grid.add(outputLabel, 0, 1);
         grid.add(outputDirField, 1, 1);
+        grid.add(outputBrowseBtn, 2, 1);
 
         grid.add(passwordLabel, 0, 2);
         grid.add(passwordField, 1, 2);
