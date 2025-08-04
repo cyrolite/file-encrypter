@@ -1,0 +1,24 @@
+# Ignore all .db files (anywhere)
+*.db
+
+# Ignore everything under any 'user' directory, regardless of nesting
+**/user/**
+
+# Ignore Windows hidden system files
+Thumbs.db
+Desktop.ini
+
+# Ignore macOS cruft
+.DS_Store
+
+# Ignore compiled class files
+*.class
+
+# Ignore IDEs
+.vscode/
+.idea/
+
+# Ignore output folders
+out/
+build/
+dist/
