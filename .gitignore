@@ -19,6 +19,5 @@ Desktop.ini
 .idea/
 
 # Ignore output folders
-out/
 build/
 dist/
