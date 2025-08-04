@@ -7,7 +7,7 @@ import java.nio.charset.StandardCharsets;
 /**
  * SHA256 class provides methods to generate SHA-256 hashes.
  */
-class SHA256 {
+public class SHA256 {
     /**
      * Generates a SHA-256 hash of the given plaintext.
      * * @param plaintext The input string to hash.

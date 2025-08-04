@@ -16,7 +16,7 @@ import java.io.FileNotFoundException;
 /**
  * Parser class provides methods to parse files and return their content.
  */
-class FileParser {
+public final class FileParser {
     /**
      * Parses a file and returns a ParsedFile object containing its content.
      * The file path is sanitized to prevent directory traversal attacks.
