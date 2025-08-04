@@ -7,53 +7,65 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import java.sql.*;
-import tools.SHA256;
 import util.UserDB;
 
 public class Login extends Application {
-    private static final String DB_PATH = "users.db";
 
     @Override
     public void start(Stage primaryStage) {
+        // UI Elements
         Label userLabel = new Label("Username:");
         TextField userField = new TextField();
+        userField.getStyleClass().add("text-field");
+
         Label passLabel = new Label("Password:");
         PasswordField passField = new PasswordField();
+        passField.getStyleClass().add("password-field");
+
         Button loginBtn = new Button("Login");
         Button registerBtn = new Button("Register");
-        Label statusLabel = new Label();
 
+        Label statusLabel = new Label();
+        statusLabel.setId("status-label");
+
+        // Login action
         loginBtn.setOnAction(e -> {
-            System.out.println("Login button clicked");
-            
-            String username = userField.getText();  // ✅ Add this line
+            String username = userField.getText();
             String password = passField.getText();
 
             if (UserDB.validateUser(username, password)) {
                 System.out.println("Login successful for: " + username);
-                new Main().startForUser(new Stage(), username);  // ✅ Now works
+                new Main().startForUser(new Stage(), username);
                 primaryStage.close();
             } else {
-                System.out.println("Login failed for: " + username);
                 statusLabel.setText("Invalid credentials.");
+                statusLabel.setStyle("-fx-text-fill: red;");
             }
         });
 
+        // Register action
         registerBtn.setOnAction(e -> {
             if (UserDB.registerUser(userField.getText(), passField.getText())) {
                 statusLabel.setText("User registered! You can now log in.");
+                statusLabel.setStyle("-fx-text-fill: green;");
             } else {
                 statusLabel.setText("User already exists.");
+                statusLabel.setStyle("-fx-text-fill: red;");
             }
         });
 
+        // Layout setup
         VBox layout = new VBox(10, userLabel, userField, passLabel, passField, loginBtn, registerBtn, statusLabel);
         layout.setPadding(new Insets(20));
         layout.setAlignment(Pos.CENTER);
-        Scene scene = new Scene(layout, 300, 250);
+
+        // Scene & Stage
+        Scene scene = new Scene(layout, 320, 280);
+        scene.getStylesheets().add(getClass().getResource("/login.css").toExternalForm());
+
         primaryStage.setTitle("Login");
         primaryStage.setScene(scene);
+        primaryStage.setResizable(false);
         primaryStage.show();
     }
 
