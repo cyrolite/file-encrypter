@@ -46,8 +46,8 @@ Future updates will seek to add support for Mac (and Linux).
 If you prefer to run commands manually:
 
 ```
-javac --module-path "path/to/javafx-sdk/lib" --add-modules javafx.controls,javafx.fxml -cp src/main/resources -d out src/main/java/io/*.java src/main/java/tools/*.java src/main/java/util/*.java
-java --module-path "path/to/javafx-sdk/lib" --add-modules javafx.controls,javafx.fxml -cp out;src/main/resources io.Main
+javac -cp "lib/sqlite-jdbc-3.42.0.0.jar;src/main/resources" --module-path "C:\javafx-sdk-21.0.8\lib" --add-modules javafx.controls,javafx.fxml -d out src/main/java/io/*.java src/main/java/tools/*.java src/main/java/util/*.java src/main/java/ui/*.java
+java -cp "out;lib/sqlite-jdbc-3.42.0.0.jar;src/main/resources" --module-path "C:\javafx-sdk-21.0.8\lib" --add-modules javafx.controls,javafx.fxml ui.Login
 ```
 
 Replace `"path/to/javafx-sdk/lib"` with the actual path to your JavaFX SDK's `lib` folder.
